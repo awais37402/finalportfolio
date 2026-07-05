@@ -28,17 +28,29 @@ const Projects = () => {
 
   const projects = useMemo(() => [
     {
-      id: 1,
-      title: 'E-Commerce Platform',
-      category: 'Full Stack',
-      description: 'A complete e-commerce solution with payment integration, user authentication, and admin dashboard.',
-      video: project1Video,
-      thumbnail: project1Thumb,
-      technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-      features: ['User Authentication', 'Payment Gateway', 'Admin Panel', 'Order Tracking'],
-      liveDemo: 'https://example.com/project1',
-      github: 'https://github.com/yourusername/project1'
-    },
+  id: 1,
+  title: 'Luxury Watches Store',
+  category: 'Full Stack',
+  description: 'A modern full-stack eCommerce website for buying luxury watches with secure authentication, product management, and a seamless shopping experience.',
+  video: project1Video,
+  thumbnail: project1Thumb,
+  technologies: [
+    'React.js',
+    'Node.js',
+    'Express.js',
+    'MongoDB',
+    'JWT',
+    'CSS3'
+  ],
+  features: [
+    'Secure Authentication',
+    'Shopping Cart',
+    'Product Management',
+    'Order Management'
+  ],
+  liveDemo: 'https://example.com/project1', // Replace with your live demo URL
+  github: 'https://github.com/awais37402/watch'
+},
    {
   id: 2,
   title: 'AI Resume Builder',
