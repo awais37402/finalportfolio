@@ -39,18 +39,23 @@ const Projects = () => {
       liveDemo: 'https://example.com/project1',
       github: 'https://github.com/yourusername/project1'
     },
-    {
-      id: 2,
-      title: 'Task Management App',
-      category: 'React',
-      description: 'A collaborative task management application with real-time updates and team collaboration features.',
-      video: project2Video,
-      thumbnail: project2Thumb,
-      technologies: ['React', 'Firebase', 'Tailwind CSS'],
-      features: ['Real-time Updates', 'Team Collaboration', 'Task Assignment', 'Progress Tracking'],
-      liveDemo: 'https://example.com/project2',
-      github: 'https://github.com/yourusername/project2'
-    },
+   {
+  id: 2,
+  title: 'AI Resume Builder',
+  category: 'React',
+  description: 'A SaaS-based AI resume builder that generates professional CVs from basic user information in seconds.',
+  video: project2Video,
+  thumbnail: project2Thumb,
+  technologies: ['React.js', 'JavaScript', 'CSS3', 'HTML5'],
+  features: [
+    'AI CV Generation',
+    'Professional Templates',
+    'Instant Preview',
+    'Responsive Design'
+  ],
+  liveDemo: 'https://example.com/project2', // Replace with your live demo URL
+  github: 'https://github.com/awais37402/resume'
+},
     {
       id: 3,
       title: 'Portfolio Website',
