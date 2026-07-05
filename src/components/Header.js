@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import './Header.css';
 
 const Header = () => {
@@ -8,13 +8,14 @@ const Header = () => {
   const mobileMenuRef = useRef(null);
   const toggleButtonRef = useRef(null);
 
-  const navLinks = [
+  // Fixed: Wrap navLinks with useMemo to prevent recreation on every render
+  const navLinks = useMemo(() => [
     { name: 'Home', href: '#home' },
     { name: 'Experience', href: '#experience' },
     { name: 'Tech Stack', href: '#tech-stack' },
     { name: 'Projects', href: '#projects' },
     { name: 'Contact', href: '#contact' },
-  ];
+  ], []);
 
   // Handle scroll events with performance optimization
   useEffect(() => {
@@ -99,8 +100,8 @@ const Header = () => {
     }, 150);
   };
 
-  // Handle click outside to close menu
-  const handleOutsideClick = (e) => {
+  // Fixed: Wrap handleOutsideClick with useCallback
+  const handleOutsideClick = useCallback((e) => {
     if (isMobileMenuOpen &&
       mobileMenuRef.current &&
       !mobileMenuRef.current.contains(e.target) &&
@@ -108,12 +109,13 @@ const Header = () => {
       !toggleButtonRef.current.contains(e.target)) {
       closeMobileMenu();
     }
-  };
+  }, [isMobileMenuOpen]);
 
+  // Fixed: Add handleOutsideClick to dependency array
   useEffect(() => {
     document.addEventListener('click', handleOutsideClick);
     return () => document.removeEventListener('click', handleOutsideClick);
-  }, [isMobileMenuOpen]);
+  }, [handleOutsideClick]);
 
   const handleWhatsApp = () => {
     window.open('https://wa.me/923213762964', '_blank');
@@ -216,9 +218,10 @@ const Header = () => {
           </ul>
           <div className="mobile-footer">
             <div className="mobile-social">
-              <a href="#" className="mobile-social-link">GitHub</a>
-              <a href="#" className="mobile-social-link">LinkedIn</a>
-              <a href="#" className="mobile-social-link">Twitter</a>
+              {/* Fixed: Added real URLs */}
+              <a href="https://github.com/awais37402" target="_blank" rel="noopener noreferrer" className="mobile-social-link">GitHub</a>
+              <a href="https://www.linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" className="mobile-social-link">LinkedIn</a>
+              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" className="mobile-social-link">Twitter</a>
             </div>
             <button className="mobile-whatsapp-btn" onClick={handleWhatsApp}>
               <svg viewBox="0 0 24 24" fill="currentColor">

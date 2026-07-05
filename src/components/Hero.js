@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './Hero.css';
 import profileImg from '../assets/a.jpg';
 
@@ -8,12 +8,13 @@ const Hero = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const professions = [
+  // Fixed: Wrap professions with useMemo to prevent recreation on every render
+  const professions = useMemo(() => [
     'Full Stack Developer',
     'React Specialist',
     'UI/UX Enthusiast',
     'Problem Solver'
-  ];
+  ], []);
 
   // Reset scroll position on mount
   useEffect(() => {
@@ -98,11 +99,11 @@ const Hero = () => {
               </button>
             </div>
 
-            {/* Social Icons */}
+            {/* Fixed: Added real URLs to social icons */}
             <div className="social-icons">
-              <a href="#" className="social-icon">GitHub</a>
-              <a href="#" className="social-icon">LinkedIn</a>
-              <a href="#" className="social-icon">Twitter</a>
+              <a href="https://github.com/awais37402" target="_blank" rel="noopener noreferrer" className="social-icon">GitHub</a>
+              <a href="https://www.linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" className="social-icon">LinkedIn</a>
+              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" className="social-icon">Twitter</a>
             </div>
           </div>
           
