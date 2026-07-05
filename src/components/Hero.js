@@ -48,6 +48,14 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, loopNum, typingSpeed, professions]);
 
+  // Smooth scroll function
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <section className="hero-section" id="home">
       {/* Animated Background Particles */}
@@ -89,21 +97,48 @@ const Hero = () => {
             </p>
             
             <div className="hero-buttons">
-              <button className="btn btn-primary">
+              <button 
+                className="btn btn-primary"
+                onClick={() => scrollToSection('projects')}
+              >
                 <span className="btn-text">View My Work</span>
                 <span className="btn-icon">→</span>
               </button>
-              <button className="btn btn-secondary">
+              <button 
+                className="btn btn-secondary"
+                onClick={() => scrollToSection('contact')}
+              >
                 <span className="btn-text">Contact Me</span>
                 <span className="btn-icon">✉</span>
               </button>
             </div>
 
-            {/* Fixed: Added real URLs to social icons */}
+            {/* Updated social icons with correct URLs */}
             <div className="social-icons">
-              <a href="https://github.com/awais37402" target="_blank" rel="noopener noreferrer" className="social-icon">GitHub</a>
-              <a href="https://www.linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" className="social-icon">LinkedIn</a>
-              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" className="social-icon">Twitter</a>
+              <a 
+                href="https://github.com/awais37402" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-icon"
+              >
+                GitHub
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/awais-tahir-037245253/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-icon"
+              >
+                LinkedIn
+              </a>
+              <a 
+                href="https://twitter.com/yourusername" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-icon"
+              >
+                Twitter
+              </a>
             </div>
           </div>
           
