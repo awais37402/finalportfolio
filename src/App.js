@@ -7,6 +7,7 @@ import TechStack from './components/TechStack';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Me from './components/me'; // Import the Me component
 
 function App() {
   // Scroll to top on page load/refresh
@@ -40,6 +41,7 @@ function App() {
       <Projects />
       <Contact />
       <Footer />
+      <Me /> {/* Add the Me component */}
     </div>
   );
 }
