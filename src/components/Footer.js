@@ -1,31 +1,73 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Footer.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef(null);
+  const [, setIsVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            setIsVisible(true);
+            const elements = document.querySelectorAll('.footer-animate');
+            elements.forEach((el) => {
+              el.classList.add('visible');
+            });
           }
         });
       },
-      { threshold: 0.1 }
+      { 
+        threshold: 0.05,
+        rootMargin: '50px'
+      }
     );
 
-    const elements = document.querySelectorAll('.footer-animate');
-    elements.forEach((el) => observer.observe(el));
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.footer-animate');
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        if (rect.top < windowHeight && rect.bottom > 0) {
+          el.classList.add('visible');
+        }
+      });
+    }, 100);
 
-    return () => observer.disconnect();
+    const current = footerRef.current;
+
+    if (current) {
+      observer.observe(current);
+    }
+
+    return () => {
+      if (current) {
+        observer.unobserve(current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elements = document.querySelectorAll('.footer-animate');
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        if (rect.top < windowHeight - 50 && rect.bottom > 50) {
+          el.classList.add('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const socialLinks = [
-    { name: 'GitHub', icon: '🐙', url: '#' },
-    { name: 'LinkedIn', icon: '💼', url: '#' },
+    { name: 'GitHub', icon: '🐙', url: 'https://github.com/awais37402' },
+    { name: 'LinkedIn', icon: '💼', url: 'https://www.linkedin.com/in/awais-tahir-037245253/' },
     { name: 'Twitter', icon: '🐦', url: '#' },
     { name: 'YouTube', icon: '📺', url: '#' },
   ];
@@ -56,7 +98,6 @@ const Footer = () => {
 
   return (
     <footer className="footer" ref={footerRef}>
-      {/* Animated Background Glow */}
       <div className="footer-bg">
         <div className="footer-glow footer-glow-1"></div>
         <div className="footer-glow footer-glow-2"></div>
@@ -64,10 +105,8 @@ const Footer = () => {
       </div>
 
       <div className="footer-container">
-        {/* Top Section */}
         <div className="footer-top">
-          {/* Brand */}
-          <div className="footer-brand footer-animate">
+          <div className="footer-brand footer-animate visible">
             <div className="footer-logo-wrapper">
               <div className="footer-logo">
                 <span className="footer-logo-text">AT</span>
@@ -83,8 +122,7 @@ const Footer = () => {
             <div className="footer-brand-line"></div>
           </div>
 
-          {/* Quick Links */}
-          <div className="footer-links footer-animate">
+          <div className="footer-links footer-animate visible">
             <h4 className="footer-title">Quick Links</h4>
             <ul className="footer-links-list">
               {quickLinks.map((link, index) => (
@@ -102,8 +140,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div className="footer-contact footer-animate">
+          <div className="footer-contact footer-animate visible">
             <h4 className="footer-title">Contact</h4>
             <div className="footer-contact-item">
               <span className="footer-contact-icon">✉</span>
@@ -126,8 +163,7 @@ const Footer = () => {
             </button>
           </div>
 
-          {/* Social */}
-          <div className="footer-social footer-animate">
+          <div className="footer-social footer-animate visible">
             <h4 className="footer-title">Follow Me</h4>
             <div className="footer-social-links">
               {socialLinks.map((social, index) => (
@@ -149,7 +185,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Section */}
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p className="footer-copyright">

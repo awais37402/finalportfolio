@@ -8,7 +8,6 @@ const Hero = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  // Fixed: Wrap professions with useMemo to prevent recreation on every render
   const professions = useMemo(() => [
     'Full Stack Developer',
     'React Specialist',
@@ -16,7 +15,6 @@ const Hero = () => {
     'Problem Solver'
   ], []);
 
-  // Reset scroll position on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -48,7 +46,6 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, loopNum, typingSpeed, professions]);
 
-  // Smooth scroll function
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -58,7 +55,6 @@ const Hero = () => {
 
   return (
     <section className="hero-section" id="home">
-      {/* Animated Background Particles */}
       <div className="particles">
         <div className="particle"></div>
         <div className="particle"></div>
@@ -75,7 +71,6 @@ const Hero = () => {
       <div className="hero-container">
         <div className="hero-content">
           <div className="hero-text">
-            {/* Floating Badge */}
             <div className="floating-badge">✨ Available for Work</div>
 
             <h1 className="hero-title">
@@ -113,7 +108,6 @@ const Hero = () => {
               </button>
             </div>
 
-            {/* Updated social icons with correct URLs */}
             <div className="social-icons">
               <a 
                 href="https://github.com/awais37402" 
@@ -155,7 +149,6 @@ const Hero = () => {
         </div>
       </div>
       
-      {/* Scroll Indicator */}
       <div className="scroll-indicator">
         <span>Scroll</span>
         <div className="mouse">

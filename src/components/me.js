@@ -3,7 +3,6 @@ import './me.css';
 
 const Me = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const menuRef = useRef(null);
 
   const socialLinks = [
@@ -53,7 +52,6 @@ const Me = () => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsOpen(false);
-        setHoveredIndex(null);
       }
     };
 
@@ -64,9 +62,6 @@ const Me = () => {
   // Toggle menu
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) {
-      setHoveredIndex(null);
-    }
   };
 
   return (
@@ -86,8 +81,6 @@ const Me = () => {
               '--delay': `${(link.id - 1) * 0.1}s`,
               '--bg': link.color
             }}
-            onMouseEnter={() => setHoveredIndex(link.id)}
-            onMouseLeave={() => setHoveredIndex(null)}
             aria-label={link.name}
           >
             <div className="social-icon-wrapper" style={{ '--hover-color': link.color }}>

@@ -85,16 +85,29 @@
   box-sizing: border-box;
 }
 
-/* ===== ANIMATIONS ===== */
+/* ===== ANIMATIONS - FIXED ===== */
 .footer-animate {
-  opacity: 0;
-  transform: translateY(30px);
+  opacity: 1; /* Always visible by default */
+  transform: translateY(0);
   transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Initial state - slightly moved up */
+.footer-animate:not(.visible) {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Visible state */
 .footer-animate.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Ensure all elements are visible on load */
+.footer-animate.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* ===== BRAND ===== */
@@ -174,12 +187,6 @@
   height: 2px;
   background: linear-gradient(135deg, #f7971e, #ffd200);
   border-radius: 2px;
-  animation: lineExpand 1.5s ease-out forwards;
-}
-
-@keyframes lineExpand {
-  from { width: 0; opacity: 0; }
-  to { width: 50px; opacity: 1; }
 }
 
 /* ===== TITLES ===== */
@@ -221,19 +228,8 @@
 }
 
 .footer-links-list li {
-  opacity: 0;
-  animation: slideInLeft 0.5s ease forwards;
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  opacity: 1; /* Always visible */
+  animation: none; /* Remove animation to prevent issues */
 }
 
 .footer-link {
@@ -368,20 +364,8 @@
   font-size: 0.85rem;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   padding: 6px 0;
-  opacity: 0;
-  animation: slideInRight 0.5s ease forwards;
+  opacity: 1; /* Always visible */
   position: relative;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 .footer-social-link:hover {
@@ -680,14 +664,14 @@
     transform: none !important;
   }
   
+  .footer-animate:not(.visible) {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
   .footer-links-list li,
   .footer-social-link {
     opacity: 1 !important;
     animation: none !important;
-  }
-  
-  .footer-brand-line {
-    animation: none !important;
-    width: 50px !important;
   }
 }
