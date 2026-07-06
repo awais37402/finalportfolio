@@ -1,21 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Footer.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef(null);
-  const [, setIsVisible] = useState(false);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
+    // Check if footer is already visible on mount
+    const checkInitialVisibility = () => {
+      const elements = document.querySelectorAll('.footer-animate');
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        if (rect.top < windowHeight && rect.bottom > 0) {
+          el.classList.add('visible');
+          hasAnimated.current = true;
+        }
+      });
+    };
+
+    // Initial check after a small delay to ensure DOM is ready
+    const timeoutId = setTimeout(checkInitialVisibility, 100);
+
+    // Create observer that disconnects after first trigger
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
+          if (entry.isIntersecting && !hasAnimated.current) {
             const elements = document.querySelectorAll('.footer-animate');
             elements.forEach((el) => {
               el.classList.add('visible');
             });
+            hasAnimated.current = true;
+            
+            // Disconnect observer after first animation
+            observer.disconnect();
           }
         });
       },
@@ -25,17 +45,6 @@ const Footer = () => {
       }
     );
 
-    setTimeout(() => {
-      const elements = document.querySelectorAll('.footer-animate');
-      elements.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        if (rect.top < windowHeight && rect.bottom > 0) {
-          el.classList.add('visible');
-        }
-      });
-    }, 100);
-
     const current = footerRef.current;
 
     if (current) {
@@ -43,26 +52,12 @@ const Footer = () => {
     }
 
     return () => {
+      clearTimeout(timeoutId);
       if (current) {
         observer.unobserve(current);
       }
+      observer.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const elements = document.querySelectorAll('.footer-animate');
-      elements.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        if (rect.top < windowHeight - 50 && rect.bottom > 50) {
-          el.classList.add('visible');
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const socialLinks = [
@@ -106,7 +101,7 @@ const Footer = () => {
 
       <div className="footer-container">
         <div className="footer-top">
-          <div className="footer-brand footer-animate visible">
+          <div className="footer-brand footer-animate">
             <div className="footer-logo-wrapper">
               <div className="footer-logo">
                 <span className="footer-logo-text">AT</span>
@@ -122,7 +117,7 @@ const Footer = () => {
             <div className="footer-brand-line"></div>
           </div>
 
-          <div className="footer-links footer-animate visible">
+          <div className="footer-links footer-animate">
             <h4 className="footer-title">Quick Links</h4>
             <ul className="footer-links-list">
               {quickLinks.map((link, index) => (
@@ -140,7 +135,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="footer-contact footer-animate visible">
+          <div className="footer-contact footer-animate">
             <h4 className="footer-title">Contact</h4>
             <div className="footer-contact-item">
               <span className="footer-contact-icon">✉</span>
@@ -163,7 +158,7 @@ const Footer = () => {
             </button>
           </div>
 
-          <div className="footer-social footer-animate visible">
+          <div className="footer-social footer-animate">
             <h4 className="footer-title">Follow Me</h4>
             <div className="footer-social-links">
               {socialLinks.map((social, index) => (
