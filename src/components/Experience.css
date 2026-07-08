@@ -540,6 +540,32 @@
   stroke: #ffd200;
 }
 
+/* ===== MOBILE ARROW BOUNCE ANIMATION ===== */
+.bounce-arrow {
+  animation: bounceArrow 1.5s ease-in-out infinite;
+}
+
+@keyframes bounceArrow {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+/* Touch device tap animation */
+@media (hover: none) {
+  .flip-card:active .card-arrow {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+  }
+  
+  .flip-card:active .flip-card-inner {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
 /* ===== BACK SIDE STYLES ===== */
 .back-header {
   display: flex;
@@ -1109,7 +1135,7 @@
 /* ===== TOUCH DEVICES ===== */
 @media (hover: none) {
   .flip-card {
-    cursor: default;
+    cursor: pointer;
   }
   
   .flip-card-inner.flipped {
@@ -1128,6 +1154,25 @@
   .tech-preview-tag:hover {
     background: rgba(255, 255, 255, 0.04);
     color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .flip-card:hover .card-arrow {
+    background: rgba(255, 255, 255, 0.04);
+    transform: none;
+  }
+  
+  .flip-card:hover .card-arrow svg {
+    stroke: rgba(255, 255, 255, 0.3);
+  }
+  
+  .flip-card:hover .card-icon {
+    transform: none;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .exp-item-3d:hover .dot-core {
+    transform: none;
+    box-shadow: 0 0 30px rgba(247, 151, 30, 0.4);
   }
 }
 
@@ -1173,5 +1218,9 @@
     animation: none !important;
     width: 80px;
     opacity: 1;
+  }
+  
+  .bounce-arrow {
+    animation: none !important;
   }
 }
