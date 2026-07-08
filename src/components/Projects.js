@@ -69,17 +69,22 @@ const Projects = () => {
       github: 'https://github.com/awais37402/resume'
     },
     {
-      id: 3,
-      title: 'Portfolio Website',
-      category: 'Frontend',
-      description: 'A modern and responsive portfolio website with smooth animations and interactive elements.',
-      video: project3Video,
-      thumbnail: project3Thumb,
-      technologies: ['React', 'Framer Motion', 'CSS3'],
-      features: ['Smooth Animations', 'Responsive Design', 'Dark Mode', 'Interactive UI'],
-      liveDemo: 'https://example.com/project3',
-      github: 'https://github.com/yourusername/project3'
-    },
+  id: 3,
+  title: 'Dental Clinic Website',
+  category: 'Frontend',
+  description: 'A modern and responsive dental clinic website built with React.js, featuring a clean design, smooth navigation, and an appointment-focused user experience.',
+  video: project3Video,
+  thumbnail: project3Thumb,
+  technologies: ['React.js', 'CSS3', 'JavaScript'],
+  features: [
+    'Responsive Design',
+    'Online Appointment Section',
+    'Modern UI/UX',
+    'Smooth Navigation'
+  ],
+  liveDemo: 'https://example.com/project3',
+  github: 'https://github.com/yourusername/project3'
+},
     {
       id: 4,
       title: 'Weather Dashboard',
