@@ -90,8 +90,8 @@ const Projects = () => {
   title: 'Order Management System',
   category: 'Full Stack',
   description: 'A comprehensive order management dashboard for watch retailers with real-time order tracking, admin controls, and customer management features.',
-  video: project5,
-  thumbnail: project5,
+  video: project4,
+  thumbnail: project4,
   technologies: ['React', 'Node.js', 'MongoDB', 'Express', 'JWT', 'Socket.io'],
   features: [
     'Real-time Order Tracking',
