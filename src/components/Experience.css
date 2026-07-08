@@ -1,4 +1,290 @@
-/* ===== EXPERIENCE SECTION - 2026 TRENDY STYLE ===== */
+I've created a complete, modern Experience section component with flip cards and a 3D timeline. The code is split into two files: the React component (Experience.jsx) and its CSS styles (Experience.css).
+```jsx
+// Experience.jsx
+import React, { useEffect, useRef, useState } from 'react';
+import './Experience.css';
+
+const Experience = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [flippedCards, setFlippedCards] = useState({});
+  const sectionRef = useRef(null);
+  const timelineRef = useRef(null);
+  const isTouchDevice = useRef(false);
+
+  const experiences = [
+    {
+      id: 1,
+      company: 'Bassr Company',
+      location: 'Islamabad, Pakistan',
+      role: 'Web Developer',
+      duration: '1 Year',
+      initials: 'B',
+      color: '#f7971e',
+      icon: '💻',
+      responsibilities: [
+        'Developed responsive and user-friendly websites.',
+        'Built modern interfaces using HTML, CSS, JavaScript, and React.js.',
+        'Converted UI/UX designs into functional web pages.',
+        'Optimized website performance and fixed bugs.',
+        'Collaborated with designers and team members on client projects.'
+      ],
+      technologies: ['React.js', 'JavaScript', 'HTML5', 'CSS3', 'Bootstrap', 'Git'],
+      achievement: 'Increased page load speed by 40%'
+    },
+    {
+      id: 2,
+      company: 'Huawei Technologies',
+      location: 'Islamabad, Pakistan',
+      role: 'Civil Design Specialist',
+      duration: '1 Year',
+      initials: 'H',
+      color: '#00d4ff',
+      icon: '🏗️',
+      responsibilities: [
+        'Created detailed civil engineering designs using AutoCAD.',
+        'Developed accurate 2D and 3D models for infrastructure projects.',
+        'Collaborated with engineering teams to ensure design accuracy.',
+        'Prepared technical drawings and documentation for project approval.',
+        'Ensured compliance with industry standards and project specifications.'
+      ],
+      technologies: ['AutoCAD', 'Civil 3D', 'Drafting', '3D Modeling', 'Technical Drawing'],
+      achievement: 'Delivered 50+ projects with 100% accuracy'
+    }
+  ];
+
+  // Detect touch device
+  useEffect(() => {
+    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            if (timelineRef.current) {
+              setTimeout(() => {
+                timelineRef.current.style.height = '100%';
+              }, 300);
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Handle flip on arrow click
+  const handleArrowClick = (e, expId) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setFlippedCards(prev => ({
+      ...prev,
+      [expId]: !prev[expId]
+    }));
+  };
+
+  // Handle card click for touch devices
+  const handleCardClick = (expId) => {
+    if (isTouchDevice.current) {
+      setFlippedCards(prev => ({
+        ...prev,
+        [expId]: !prev[expId]
+      }));
+    }
+  };
+
+  return (
+    <section className="experience-section" id="experience" ref={sectionRef}>
+      {/* Background Effects */}
+      <div className="exp-bg-effects">
+        <div className="exp-glow exp-glow-1"></div>
+        <div className="exp-glow exp-glow-2"></div>
+        <div className="exp-glow exp-glow-3"></div>
+        <div className="exp-grid-lines"></div>
+      </div>
+
+      <div className="exp-container">
+        {/* Section Header */}
+        <div className="exp-header">
+          <span className="exp-badge">
+            <span className="badge-pulse"></span>
+            ✦ Experience
+          </span>
+          <h2 className="exp-title">
+            My <span className="highlight">Journey</span>
+            <span className="title-underline"></span>
+          </h2>
+          <p className="exp-subtitle">
+            Crafting digital experiences & engineering solutions
+          </p>
+          <div className="exp-header-line"></div>
+        </div>
+
+        {/* 3D Timeline */}
+        <div className="exp-timeline-3d">
+          {/* Timeline Line with Gradient */}
+          <div className="timeline-line-wrapper-3d">
+            <div className="timeline-line-3d" ref={timelineRef}>
+              <div className="line-glow"></div>
+            </div>
+          </div>
+
+          {/* Experience Items with Flip Cards */}
+          {experiences.map((exp, index) => {
+            const isFlipped = flippedCards[exp.id] || false;
+            const isHovered = hoveredCard === exp.id;
+            
+            return (
+              <div 
+                key={exp.id} 
+                className={`exp-item-3d ${isVisible ? 'visible' : ''}`}
+                style={{ 
+                  animationDelay: `${index * 0.4}s`,
+                  '--card-color': exp.color 
+                }}
+                onMouseEnter={() => !isTouchDevice.current && setHoveredCard(exp.id)}
+                onMouseLeave={() => !isTouchDevice.current && setHoveredCard(null)}
+                onClick={() => handleCardClick(exp.id)}
+              >
+                {/* Timeline Dot with 3D effect */}
+                <div className="timeline-dot-wrapper-3d">
+                  <div className="timeline-dot-3d">
+                    <div className="dot-ring"></div>
+                    <div className="dot-core"></div>
+                    <div className="dot-pulse-3d"></div>
+                  </div>
+                </div>
+
+                {/* Flip Card */}
+                <div className="flip-card">
+                  <div className={`flip-card-inner ${(isHovered || isFlipped) ? 'flipped' : ''}`}>
+                    {/* Front Side */}
+                    <div className="flip-card-front">
+                      <div className="card-shine"></div>
+                      <div className="card-gradient-bg"></div>
+                      
+                      <div className="card-header">
+                        <div className="card-icon-wrapper">
+                          <div className="card-icon" style={{ background: exp.color }}>
+                            <span>{exp.icon}</span>
+                          </div>
+                        </div>
+                        <div className="card-badge">{exp.duration}</div>
+                      </div>
+
+                      <div className="card-body">
+                        <h3 className="card-company">{exp.company}</h3>
+                        <p className="card-location">
+                          <svg className="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                          </svg>
+                          {exp.location}
+                        </p>
+                        <div className="card-role-wrapper">
+                          <span className="card-role">{exp.role}</span>
+                        </div>
+                        
+                        <div className="card-tech-preview">
+                          {exp.technologies.slice(0, 4).map((tech, idx) => (
+                            <span key={idx} className="tech-preview-tag">{tech}</span>
+                          ))}
+                          {exp.technologies.length > 4 && (
+                            <span className="tech-preview-more">+{exp.technologies.length - 4}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="card-footer">
+                        <span className="flip-hint">
+                          {isTouchDevice.current ? 'Tap to flip →' : 'Click arrow to flip →'}
+                        </span>
+                        <div 
+                          className={`card-arrow ${isTouchDevice.current ? 'bounce-arrow' : ''}`}
+                          onClick={(e) => handleArrowClick(e, exp.id)}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back Side */}
+                    <div className="flip-card-back">
+                      <div className="card-shine"></div>
+                      <div className="back-gradient"></div>
+                      
+                      <div className="back-header">
+                        <span className="back-achievement">🏆</span>
+                        <span className="back-achievement-text">{exp.achievement}</span>
+                      </div>
+
+                      <div className="back-body">
+                        <h4 className="back-title">Key Responsibilities</h4>
+                        <ul className="back-responsibilities">
+                          {exp.responsibilities.map((item, idx) => (
+                            <li key={idx}>
+                              <span className="bullet-point"></span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="back-footer">
+                        <div className="back-tech-stack">
+                          {exp.technologies.map((tech, idx) => (
+                            <span key={idx} className="back-tech-tag">{tech}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Stats Section - Single Row for all devices */}
+        <div className="exp-stats">
+          <div className="stat-item">
+            <span className="stat-number">2+</span>
+            <span className="stat-label">Years Experience</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat-item">
+            <span className="stat-number">50+</span>
+            <span className="stat-label">Projects Delivered</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat-item">
+            <span className="stat-number">100%</span>
+            <span className="stat-label">Client Satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Experience;
+```
+```css
+/* Experience.css */
 .experience-section {
   padding: 120px 20px;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
@@ -9,7 +295,6 @@
   min-height: 100vh;
 }
 
-/* ===== BACKGROUND EFFECTS ===== */
 .exp-bg-effects {
   position: absolute;
   width: 100%;
@@ -78,7 +363,6 @@
   66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
-/* ===== CONTAINER ===== */
 .exp-container {
   max-width: 1000px;
   margin: 0 auto;
@@ -87,14 +371,12 @@
   z-index: 1;
 }
 
-/* ===== SECTION HEADER ===== */
 .exp-header {
   text-align: center;
   margin-bottom: 80px;
   position: relative;
 }
 
-/* BADGE - FIRST ROW */
 .exp-badge {
   display: inline-flex;
   align-items: center;
@@ -133,7 +415,6 @@
   50% { opacity: 0.3; transform: scale(0.8); }
 }
 
-/* TITLE - SECOND ROW */
 .exp-title {
   font-size: 4rem;
   font-weight: 800;
@@ -168,7 +449,6 @@
   50% { transform: translateX(-50%) scaleX(1); opacity: 1; }
 }
 
-/* SUBTITLE - THIRD ROW */
 .exp-subtitle {
   font-size: 1.2rem;
   color: #aaaaaa;
@@ -179,7 +459,6 @@
   width: 100%;
 }
 
-/* HEADER LINE - FOURTH ROW */
 .exp-header-line {
   width: 80px;
   height: 4px;
@@ -194,14 +473,12 @@
   to { width: 80px; opacity: 1; }
 }
 
-/* ===== 3D TIMELINE ===== */
 .exp-timeline-3d {
   position: relative;
   padding-left: 50px;
   perspective: 1000px;
 }
 
-/* ===== TIMELINE LINE 3D ===== */
 .timeline-line-wrapper-3d {
   position: absolute;
   left: 20px;
@@ -234,7 +511,6 @@
   filter: blur(10px);
 }
 
-/* ===== EXPERIENCE ITEM 3D ===== */
 .exp-item-3d {
   position: relative;
   margin-bottom: 60px;
@@ -252,7 +528,6 @@
   transform: translateY(0) rotateX(0deg);
 }
 
-/* ===== TIMELINE DOT 3D ===== */
 .timeline-dot-wrapper-3d {
   position: absolute;
   left: -50px;
@@ -313,7 +588,6 @@
   50% { transform: scale(1.5); opacity: 0; }
 }
 
-/* ===== FLIP CARD - SMOOTH ANIMATION ===== */
 .flip-card {
   background: transparent;
   height: 420px;
@@ -361,7 +635,6 @@
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.98));
 }
 
-/* Hover effect - only on non-touch devices */
 @media (hover: hover) {
   .flip-card:hover .flip-card-inner:not(.flipped) {
     transform: rotateY(8deg);
@@ -374,7 +647,6 @@
   }
 }
 
-/* Card Shine Effect */
 .card-shine {
   position: absolute;
   top: -50%;
@@ -385,7 +657,6 @@
   pointer-events: none;
 }
 
-/* Card Gradient Background */
 .card-gradient-bg {
   position: absolute;
   top: 0;
@@ -408,7 +679,6 @@
   pointer-events: none;
 }
 
-/* ===== FRONT SIDE STYLES ===== */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -564,7 +834,6 @@
   stroke: #ffd200;
 }
 
-/* ===== MOBILE ARROW BOUNCE ANIMATION ===== */
 .bounce-arrow {
   animation: bounceArrow 1.5s ease-in-out infinite;
 }
@@ -578,7 +847,6 @@
   }
 }
 
-/* ===== BACK SIDE STYLES ===== */
 .back-header {
   display: flex;
   align-items: center;
@@ -677,7 +945,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== STATS SECTION - SINGLE ROW ===== */
 .exp-stats {
   margin-top: 80px;
   display: flex;
@@ -695,7 +962,6 @@
   min-width: 0;
 }
 
-/* Hide scrollbar but keep functionality */
 .exp-stats::-webkit-scrollbar {
   height: 0;
   background: transparent;
@@ -740,83 +1006,62 @@
   flex-shrink: 0;
 }
 
-/* ======================================== */
-/* ===== RESPONSIVE DESIGN ===== */
-/* ======================================== */
-
-/* ===== TABLETS & SMALL DESKTOPS ===== */
 @media screen and (max-width: 992px) {
   .exp-title {
     font-size: 3rem;
   }
-  
   .flip-card {
     height: 400px;
   }
-  
   .exp-stats {
     gap: 40px;
     padding: 30px 40px;
   }
-  
   .stat-number {
     font-size: 2.2rem;
   }
-  
   .stat-label {
     font-size: 0.8rem;
   }
 }
 
-/* ===== MOBILE LANDSCAPE ===== */
 @media screen and (max-width: 768px) {
   .experience-section {
     padding: 80px 15px;
   }
-  
   .exp-title {
     font-size: 2.5rem;
   }
-  
   .exp-subtitle {
     font-size: 1rem;
   }
-  
   .exp-header {
     margin-bottom: 60px;
   }
-  
   .exp-timeline-3d {
     padding-left: 35px;
   }
-  
   .timeline-line-wrapper-3d {
     left: 12px;
   }
-  
   .timeline-dot-wrapper-3d {
     left: -35px;
   }
-  
   .flip-card {
     height: 450px;
   }
-  
   .flip-card-front,
   .flip-card-back {
     padding: 20px;
   }
-  
   .card-company {
     font-size: 1.3rem;
   }
-  
   .card-icon {
     width: 50px;
     height: 50px;
     font-size: 1.5rem;
   }
-  
   .exp-stats {
     gap: 25px;
     padding: 25px 20px;
@@ -824,179 +1069,141 @@
     margin-top: 60px;
     justify-content: space-around;
   }
-  
   .stat-number {
     font-size: 2rem;
   }
-  
   .stat-label {
     font-size: 0.75rem;
   }
-  
   .stat-divider {
     height: 40px;
   }
-  
   .stat-item {
     min-width: 60px;
   }
 }
 
-/* ===== MOBILE PORTRAIT ===== */
 @media screen and (max-width: 480px) {
   .experience-section {
     padding: 60px 10px;
   }
-  
   .exp-title {
     font-size: 2rem;
   }
-  
   .exp-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
-  
   .exp-badge {
     font-size: 0.7rem;
     padding: 6px 16px;
   }
-  
   .exp-header {
     margin-bottom: 40px;
   }
-  
   .exp-timeline-3d {
     padding-left: 30px;
   }
-  
   .timeline-line-wrapper-3d {
     left: 10px;
   }
-  
   .timeline-dot-wrapper-3d {
     left: -30px;
   }
-  
   .timeline-dot-3d {
     width: 16px;
     height: 16px;
   }
-  
   .dot-core {
     width: 12px;
     height: 12px;
   }
-  
   .dot-ring {
     width: 30px;
     height: 30px;
     border-width: 1.5px;
   }
-  
   .dot-pulse-3d {
     width: 40px;
     height: 40px;
   }
-  
   .flip-card {
     height: 500px;
   }
-  
   .flip-card-front,
   .flip-card-back {
     padding: 16px;
     border-radius: 16px;
   }
-  
   .card-header {
     flex-direction: column;
     gap: 12px;
     margin-bottom: 16px;
   }
-  
   .card-badge {
     align-self: flex-start;
     font-size: 0.65rem;
     padding: 3px 12px;
   }
-  
   .card-company {
     font-size: 1.2rem;
   }
-  
   .card-location {
     font-size: 0.75rem;
   }
-  
   .card-role-wrapper {
     padding: 3px 12px;
     margin-bottom: 12px;
   }
-  
   .card-role {
     font-size: 0.8rem;
   }
-  
   .card-tech-preview {
     gap: 6px;
   }
-  
   .tech-preview-tag {
     font-size: 0.6rem;
     padding: 3px 10px;
   }
-  
   .card-footer {
     margin-top: 16px;
     padding-top: 16px;
   }
-  
   .flip-hint {
     font-size: 0.65rem;
   }
-  
   .card-arrow {
     width: 28px;
     height: 28px;
   }
-  
   .card-arrow svg {
     width: 14px;
     height: 14px;
   }
-  
   .back-header {
     padding: 10px 12px;
     margin-bottom: 16px;
   }
-  
   .back-achievement {
     font-size: 1.2rem;
   }
-  
   .back-achievement-text {
     font-size: 0.75rem;
   }
-  
   .back-body {
     max-height: 150px;
   }
-  
   .back-responsibilities li {
     font-size: 0.75rem;
     padding: 3px 0;
   }
-  
   .back-title {
     font-size: 0.7rem;
     margin-bottom: 8px;
   }
-  
   .back-tech-tag {
     font-size: 0.55rem;
     padding: 2px 8px;
   }
-  
   .exp-stats {
     gap: 15px;
     padding: 18px 12px;
@@ -1005,225 +1212,178 @@
     justify-content: space-around;
     -webkit-overflow-scrolling: touch;
   }
-  
   .stat-item {
     min-width: 55px;
   }
-  
   .stat-number {
     font-size: 1.5rem;
   }
-  
   .stat-label {
     font-size: 0.65rem;
   }
-  
   .stat-divider {
     height: 30px;
   }
-  
   .exp-item-3d {
     margin-bottom: 40px;
   }
 }
 
-/* ===== EXTRA SMALL DEVICES ===== */
 @media screen and (max-width: 360px) {
   .experience-section {
     padding: 50px 8px;
   }
-  
   .exp-title {
     font-size: 1.8rem;
   }
-  
   .exp-subtitle {
     font-size: 0.85rem;
   }
-  
   .exp-badge {
     font-size: 0.6rem;
     padding: 4px 12px;
     gap: 6px;
   }
-  
   .badge-pulse {
     width: 6px;
     height: 6px;
   }
-  
   .exp-timeline-3d {
     padding-left: 25px;
   }
-  
   .timeline-line-wrapper-3d {
     left: 8px;
     width: 2px;
   }
-  
   .timeline-dot-wrapper-3d {
     left: -25px;
   }
-  
   .flip-card {
     height: 520px;
   }
-  
   .flip-card-front,
   .flip-card-back {
     padding: 12px;
     border-radius: 12px;
   }
-  
   .card-icon {
     width: 44px;
     height: 44px;
     font-size: 1.3rem;
     border-radius: 12px;
   }
-  
   .card-company {
     font-size: 1.1rem;
   }
-  
   .exp-stats {
     gap: 10px;
     padding: 14px 8px;
   }
-  
   .stat-item {
     min-width: 45px;
   }
-  
   .stat-number {
     font-size: 1.3rem;
   }
-  
   .stat-label {
     font-size: 0.55rem;
   }
-  
   .stat-divider {
     height: 25px;
   }
 }
 
-/* ===== VERY SMALL SCREENS ===== */
 @media screen and (max-width: 280px) {
   .exp-stats {
     gap: 8px;
     padding: 12px 6px;
     justify-content: flex-start;
   }
-  
   .stat-item {
     min-width: 40px;
   }
-  
   .stat-number {
     font-size: 1.1rem;
   }
-  
   .stat-label {
     font-size: 0.5rem;
   }
-  
   .stat-divider {
     height: 20px;
   }
-  
   .flip-card {
     height: 560px;
   }
-  
   .card-header {
     gap: 8px;
   }
-  
   .back-body {
     max-height: 120px;
   }
 }
 
-/* ===== TOUCH DEVICES ===== */
 @media (hover: none) {
   .flip-card {
     cursor: pointer;
   }
-  
   .flip-card-inner.flipped {
     transform: rotateY(180deg);
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
   .flip-card:active .flip-card-inner:not(.flipped) {
     transform: rotateY(5deg);
     transition: transform 0.15s ease;
   }
-  
   .exp-stats {
     -webkit-overflow-scrolling: touch;
   }
-  
   .stat-item:active {
     transform: scale(0.95);
     transition: transform 0.1s ease;
   }
-  
   .tech-preview-tag:hover {
     background: rgba(255, 255, 255, 0.04);
     color: rgba(255, 255, 255, 0.5);
   }
-  
   .flip-card:hover .card-arrow {
     background: rgba(255, 255, 255, 0.04);
     transform: none;
   }
-  
   .flip-card:hover .card-arrow svg {
     stroke: rgba(255, 255, 255, 0.3);
   }
-  
   .flip-card:hover .card-icon {
     transform: none;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   }
-  
   .exp-item-3d:hover .dot-core {
     transform: none;
     box-shadow: 0 0 30px rgba(247, 151, 30, 0.4);
   }
 }
 
-/* ===== ACCESSIBILITY - REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
   .flip-card-inner.flipped {
     transform: rotateY(180deg);
   }
-  
   .exp-item-3d {
     opacity: 1 !important;
     transform: none !important;
   }
-  
   .timeline-line-3d {
     height: 100% !important;
   }
-  
   .exp-stats {
     animation: none !important;
   }
-  
   .stat-number {
     animation: none !important;
   }
-  
   .exp-glow,
   .exp-grid-lines,
   .dot-ring,
@@ -1232,14 +1392,13 @@
   .title-underline {
     animation: none !important;
   }
-  
   .exp-header-line {
     animation: none !important;
     width: 80px;
     opacity: 1;
   }
-  
   .bounce-arrow {
     animation: none !important;
   }
 }
+```
