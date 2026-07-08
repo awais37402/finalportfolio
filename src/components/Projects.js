@@ -69,43 +69,39 @@ const Projects = () => {
       github: 'https://github.com/awais37402/resume'
     },
     {
-  id: 3,
-  title: 'Dental Clinic Website',
-  category: 'Frontend',
-  description: 'A modern and responsive dental clinic website built with React.js, featuring a clean design, smooth navigation, and an appointment-focused user experience.',
-  video: project3Video,
-  thumbnail: project3Thumb,
-  technologies: ['React.js', 'CSS3', 'JavaScript'],
-  features: [
-    'Responsive Design',
-    'Online Appointment Section',
-    'Modern UI/UX',
-    'Smooth Navigation'
-  ],
-  liveDemo: 'https://example.com/project3',
-  github: 'https://github.com/yourusername/project3'
-},
+      id: 3,
+      title: 'Dental Clinic Website',
+      category: 'Frontend',
+      description: 'A modern and responsive dental clinic website built with React.js, featuring a clean design, smooth navigation, and an appointment-focused user experience.',
+      video: project3Video,
+      thumbnail: project3Thumb,
+      technologies: ['React.js', 'CSS3', 'JavaScript'],
+      features: [
+        'Responsive Design',
+        'Online Appointment Section',
+        'Modern UI/UX',
+        'Smooth Navigation'
+      ],
+      liveDemo: 'https://example.com/project3',
+      github: 'https://github.com/yourusername/project3'
+    },
     {
-  id: 4,
-  title: 'Order Management System',
-  category: 'Full Stack',
-  description: 'A comprehensive order management dashboard for watch retailers with real-time order tracking, admin controls, and customer management features.',
-  video: project4,
-  thumbnail: project4,
-  technologies: ['React', 'Node.js', 'MongoDB', 'Express', 'JWT', 'Socket.io'],
-  features: [
-    'Real-time Order Tracking',
-    'Admin Dashboard',
-    'User Authentication',
-    'Order Status Management',
-    'Inventory Management',
-    'Payment Integration',
-    'Order History',
-    'Email Notifications'
-  ],
-  liveDemo: 'https://example.com/project5',
-  github: 'https://github.com/yourusername/order-management-system'
-},
+      id: 4,
+      title: 'Order Management System',
+      category: 'Full Stack',
+      description: 'A complete order management system where customers can place orders and administrators can manage, track, and update them through a secure admin dashboard.',
+      video: project4Video,
+      thumbnail: project4Thumb,
+      technologies: ['React', 'PHP', 'MySQL', 'REST API', 'CSS3'],
+      features: [
+        'User Order Placement',
+        'Admin Dashboard',
+        'Order Status Management',
+        'Secure Authentication'
+      ],
+      liveDemo: 'https://example.com/project4',
+      github: 'https://github.com/awais37402/your-order-management-repository'
+    },
     {
       id: 5,
       title: 'Social Media App',
@@ -139,7 +135,7 @@ const Projects = () => {
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              const index = parseInt(entry.target.dataset.index);
+              const index = parseInt(entry.target.dataset.index, 10);
               setVisibleCards(prev => {
                 if (!prev.includes(index)) {
                   return [...prev, index];
