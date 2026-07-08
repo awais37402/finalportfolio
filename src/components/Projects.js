@@ -86,12 +86,12 @@ const Projects = () => {
   github: 'https://github.com/yourusername/project3'
 },
     {
-  id: 5,
+  id: 4,
   title: 'Order Management System',
   category: 'Full Stack',
   description: 'A comprehensive order management dashboard for watch retailers with real-time order tracking, admin controls, and customer management features.',
-  video: project5Video,
-  thumbnail: project5Thumb,
+  video: project5,
+  thumbnail: project5,
   technologies: ['React', 'Node.js', 'MongoDB', 'Express', 'JWT', 'Socket.io'],
   features: [
     'Real-time Order Tracking',
