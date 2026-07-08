@@ -4,38 +4,42 @@ import './Footer.css';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef(null);
-  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    // Check if footer is already visible on mount
-    const checkInitialVisibility = () => {
+    // Reset visibility on mount
+    const elements = document.querySelectorAll('.footer-animate');
+    elements.forEach((el) => {
+      el.classList.remove('visible');
+    });
+
+    // Check if footer is visible on mount
+    const checkVisibility = () => {
       const elements = document.querySelectorAll('.footer-animate');
+      const windowHeight = window.innerHeight;
+      
       elements.forEach((el) => {
         const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
+        // Check if element is in viewport
         if (rect.top < windowHeight && rect.bottom > 0) {
           el.classList.add('visible');
-          hasAnimated.current = true;
         }
       });
     };
 
-    // Initial check after a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(checkInitialVisibility, 100);
+    // Initial check after DOM is ready
+    const timeoutId = setTimeout(checkVisibility, 100);
 
-    // Create observer that disconnects after first trigger
+    // Create observer that works continuously
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated.current) {
-            const elements = document.querySelectorAll('.footer-animate');
-            elements.forEach((el) => {
-              el.classList.add('visible');
-            });
-            hasAnimated.current = true;
-            
-            // Disconnect observer after first animation
-            observer.disconnect();
+          // Add class when entering viewport, remove when leaving
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            // Optional: Remove class when leaving viewport
+            // Uncomment below if you want elements to disappear when scrolling away
+            // entry.target.classList.remove('visible');
           }
         });
       },
@@ -45,17 +49,20 @@ const Footer = () => {
       }
     );
 
-    const current = footerRef.current;
+    // Observe all footer-animate elements
+    const animateElements = document.querySelectorAll('.footer-animate');
+    animateElements.forEach((el) => {
+      observer.observe(el);
+    });
 
+    // Also observe the footer container
+    const current = footerRef.current;
     if (current) {
       observer.observe(current);
     }
 
     return () => {
       clearTimeout(timeoutId);
-      if (current) {
-        observer.unobserve(current);
-      }
       observer.disconnect();
     };
   }, []);
@@ -121,7 +128,7 @@ const Footer = () => {
             <h4 className="footer-title">Quick Links</h4>
             <ul className="footer-links-list">
               {quickLinks.map((link, index) => (
-                <li key={link.name} style={{ animationDelay: `${index * 0.1}s` }}>
+                <li key={link.name}>
                   <a
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
@@ -166,7 +173,6 @@ const Footer = () => {
                   key={index}
                   href={social.url}
                   className="footer-social-link"
-                  style={{ animationDelay: `${index * 0.1}s` }}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
