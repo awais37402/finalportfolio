@@ -86,17 +86,26 @@ const Projects = () => {
   github: 'https://github.com/yourusername/project3'
 },
     {
-      id: 4,
-      title: 'Weather Dashboard',
-      category: 'API Integration',
-      description: 'A weather forecasting application with interactive maps and real-time weather data.',
-      video: project4Video,
-      thumbnail: project4Thumb,
-      technologies: ['React', 'OpenWeather API', 'Leaflet.js'],
-      features: ['Real-time Weather', 'Interactive Maps', '7-day Forecast', 'Location Search'],
-      liveDemo: 'https://example.com/project4',
-      github: 'https://github.com/yourusername/project4'
-    },
+  id: 5,
+  title: 'Order Management System',
+  category: 'Full Stack',
+  description: 'A comprehensive order management dashboard for watch retailers with real-time order tracking, admin controls, and customer management features.',
+  video: project5Video,
+  thumbnail: project5Thumb,
+  technologies: ['React', 'Node.js', 'MongoDB', 'Express', 'JWT', 'Socket.io'],
+  features: [
+    'Real-time Order Tracking',
+    'Admin Dashboard',
+    'User Authentication',
+    'Order Status Management',
+    'Inventory Management',
+    'Payment Integration',
+    'Order History',
+    'Email Notifications'
+  ],
+  liveDemo: 'https://example.com/project5',
+  github: 'https://github.com/yourusername/order-management-system'
+},
     {
       id: 5,
       title: 'Social Media App',
