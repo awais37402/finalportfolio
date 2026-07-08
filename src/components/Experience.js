@@ -84,7 +84,8 @@ const Experience = () => {
 
   // Handle flip on arrow click
   const handleArrowClick = (e, expId) => {
-    e.stopPropagation(); // Prevent card click from firing
+    e.stopPropagation();
+    e.preventDefault();
     setFlippedCards(prev => ({
       ...prev,
       [expId]: !prev[expId]
@@ -205,7 +206,7 @@ const Experience = () => {
 
                       <div className="card-footer">
                         <span className="flip-hint">
-                          {isTouchDevice.current ? 'Tap to flip →' : 'Hover to explore →'}
+                          {isTouchDevice.current ? 'Tap to flip →' : 'Click arrow to flip →'}
                         </span>
                         <div 
                           className={`card-arrow ${isTouchDevice.current ? 'bounce-arrow' : ''}`}
