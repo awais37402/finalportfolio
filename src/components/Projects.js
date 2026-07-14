@@ -28,7 +28,7 @@ const Projects = () => {
   const videoRefs = useRef({});
   const [loading, setLoading] = useState(true);
 
-  // Complete project data - 5 Projects (wrapped with useMemo to prevent recreation)
+  // Complete project data - 5 Projects
   const projectData = useMemo(() => [
     {
       id: 1,
@@ -205,13 +205,13 @@ const Projects = () => {
       const sections = sectionsRef.current.filter(el => el !== null);
       
       // Set container width based on number of panels
-      const panelCount = sections.length + 2; // +2 for intro and outro
+      const panelCount = sections.length;
       container.style.width = `${panelCount * 100}vw`;
       container.style.display = 'flex';
       container.style.position = 'relative';
       container.style.height = '100vh';
 
-      // Create horizontal scroll animation (removed unused variable)
+      // Create horizontal scroll animation
       gsap.to(sections, {
         xPercent: -100 * (sections.length - 1),
         ease: "none",
@@ -219,7 +219,7 @@ const Projects = () => {
           trigger: container,
           pin: true,
           pinSpacing: true,
-          scrub: 0.5, // Faster sliding
+          scrub: 0.5,
           snap: {
             snapTo: 1 / (sections.length - 1),
             duration: 0.3,
@@ -264,20 +264,24 @@ const Projects = () => {
   }
 
   return (
-    <div className="projects-wrapper">
-      <div className="projects-container" ref={containerRef}>
-        {/* First Panel - Introduction */}
-        <div className="panel intro-panel">
-          <div className="intro-content">
-            <h2>Explore My Work</h2>
-            <div className="project-stats">
-              <span>🎨 Creative</span>
-              <span>💡 Innovative</span>
-              <span>🚀 Modern</span>
-            </div>
+    <div 
+      id="projects"
+      className="projects-wrapper"
+    >
+      {/* Intro Section - ABOVE the horizontal scrolling projects */}
+      <div className="projects-intro-section">
+        <div className="intro-content">
+          <h2>Explore My Work</h2>
+          <div className="project-stats">
+            <span>🎨 Creative</span>
+            <span>💡 Innovative</span>
+            <span>🚀 Modern</span>
           </div>
         </div>
+      </div>
 
+      {/* Horizontal Scrolling Projects */}
+      <div className="projects-container" ref={containerRef}>
         {/* Project Panels */}
         {projectData.map((project, index) => (
           <section 

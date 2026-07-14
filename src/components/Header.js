@@ -84,20 +84,41 @@ const Header = () => {
     document.body.style.overflow = 'auto';
   };
 
+  // FIXED: Improved navigation click handler
   const handleNavClick = (e, href) => {
     e.preventDefault();
     closeMobileMenu();
 
-    setTimeout(() => {
-      const target = document.querySelector(href);
-      if (target) {
-        const offsetTop = target.offsetTop - 80;
+    // Get the target element
+    const targetId = href.substring(1); // Remove the '#'
+    const target = document.getElementById(targetId);
+    
+    if (target) {
+      // Calculate offset (adjust based on your header height)
+      const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
+      const offsetTop = target.offsetTop - headerHeight;
+      
+      // Smooth scroll to the element
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      });
+      
+      // Update active section
+      setActiveSection(targetId);
+    } else {
+      // If element not found, try using querySelector with href
+      const element = document.querySelector(href);
+      if (element) {
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 80;
+        const offsetTop = element.offsetTop - headerHeight;
+        
         window.scrollTo({
           top: offsetTop,
           behavior: 'smooth'
         });
       }
-    }, 150);
+    }
   };
 
   // Fixed: Wrap handleOutsideClick with useCallback
@@ -218,7 +239,6 @@ const Header = () => {
           </ul>
           <div className="mobile-footer">
             <div className="mobile-social">
-              {/* Fixed: Added real URLs */}
               <a href="https://github.com/awais37402" target="_blank" rel="noopener noreferrer" className="mobile-social-link">GitHub</a>
               <a href="https://www.linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" className="mobile-social-link">LinkedIn</a>
               <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" className="mobile-social-link">Twitter</a>

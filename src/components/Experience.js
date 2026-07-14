@@ -66,7 +66,11 @@ const Experience = () => {
   const activeExp = experiences.find(exp => exp.id === activeId);
 
   return (
-    <section className="experience-section" ref={sectionRef}>
+    <section 
+      id="experience"  // <-- ADD THIS ID
+      className="experience-section" 
+      ref={sectionRef}
+    >
       <div className="experience-progress-bar" style={{ transform: `scaleX(${scrollProgress})` }} />
       
       <div className="experience-container">

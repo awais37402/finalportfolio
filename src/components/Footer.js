@@ -67,15 +67,6 @@ const Footer = () => {
     };
   }, []);
 
-
-  const socialLinks = [
-    { name: 'GitHub', icon: '🐙', url: 'https://github.com/awais37402' },
-    { name: 'LinkedIn', icon: '💼', url: 'https://www.linkedin.com/in/awais-tahir-037245253/' },
-    { name: 'Twitter', icon: '🐦', url: '#' },
-    { name: 'YouTube', icon: '📺', url: '#' },
-  ];
-
-
   const quickLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Experience', href: '#experience' },
@@ -166,27 +157,6 @@ const Footer = () => {
               <span className="btn-shimmer"></span>
             </button>
           </div>
-
-          <div className="footer-social footer-animate">
-            <h4 className="footer-title">Follow Me</h4>
-            <div className="footer-social-links">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  className="footer-social-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="footer-social-icon">{social.icon}</span>
-                  <span>{social.name}</span>
-                  <span className="footer-social-arrow">→</span>
-                </a>
-              ))}
-            </div>
-            <div className="footer-social-line"></div>
-          </div>
-
         </div>
 
         <div className="footer-bottom">

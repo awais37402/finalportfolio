@@ -27,7 +27,10 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="hero-section">
+    <section 
+      id="home"  // <-- ADD THIS ID
+      className="hero-section"
+    >
       <div className="hero-container">
         {/* Left Content */}
         <div className="hero-left" ref={leftRef}>

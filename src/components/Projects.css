@@ -18,14 +18,68 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ========== PROJECTS INTRO SECTION (ABOVE PROJECTS) ========== */
+.projects-intro-section {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0a0a1a;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.projects-intro-section .intro-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 2rem;
+  animation: fadeInUp 1s ease;
+}
+
+.projects-intro-section .intro-content h2 {
+  font-size: 4rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f7971e, #ffd200);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.projects-intro-section .project-stats {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.projects-intro-section .project-stats span {
+  background: rgba(255, 255, 255, 0.05);
+  color: #d4d4f0;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 1rem;
+  border: 1px solid rgba(247, 151, 30, 0.15);
+  transition: all 0.3s ease;
+}
+
+.projects-intro-section .project-stats span:hover {
+  background: rgba(247, 151, 30, 0.15);
+  border-color: #f7971e;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(247, 151, 30, 0.2);
+}
+
 /* ========== PROJECTS WRAPPER ========== */
 .projects-wrapper {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-.projects-wrapper {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   min-height: 100vh;
   background: #0a0a1a;
   overflow: hidden;
@@ -58,54 +112,6 @@ body {
   overflow: hidden;
   background: transparent !important;
   border: none !important;
-}
-
-/* ========== INTRO PANEL ========== */
-.intro-panel {
-  background: transparent !important;
-  border-right: none !important;
-}
-
-.intro-content {
-  text-align: center;
-  max-width: 600px;
-  padding: 2rem;
-}
-
-.intro-content h2 {
-  font-size: 4rem;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #f7971e, #ffd200);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.project-stats {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-}
-
-.project-stats span {
-  background: rgba(255, 255, 255, 0.05);
-  color: #d4d4f0;
-  padding: 8px 20px;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  border: 1px solid rgba(247, 151, 30, 0.15);
-  transition: all 0.3s ease;
-}
-
-.project-stats span:hover {
-  background: rgba(247, 151, 30, 0.15);
-  border-color: #f7971e;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(247, 151, 30, 0.2);
 }
 
 /* ========== PROJECT PANEL ========== */
@@ -281,6 +287,17 @@ body {
   to { transform: rotate(360deg); }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ========== LOADING ========== */
 .projects-loading {
   min-height: 100vh;
@@ -325,7 +342,7 @@ body {
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
-  .intro-content h2 {
+  .projects-intro-section .intro-content h2 {
     font-size: 3rem;
   }
   
@@ -351,8 +368,18 @@ body {
     padding: 1rem;
   }
   
-  .intro-content h2 {
+  .projects-intro-section {
+    padding: 2rem 1rem;
+    min-height: 80vh;
+  }
+  
+  .projects-intro-section .intro-content h2 {
     font-size: 2.5rem;
+  }
+  
+  .projects-intro-section .project-stats span {
+    padding: 8px 18px;
+    font-size: 0.9rem;
   }
   
   .project-card {
@@ -395,8 +422,13 @@ body {
     padding: 0.8rem;
   }
 
-  .intro-content h2 {
+  .projects-intro-section .intro-content h2 {
     font-size: 2rem;
+  }
+  
+  .projects-intro-section .project-stats span {
+    padding: 6px 14px;
+    font-size: 0.8rem;
   }
   
   .outro-content h2 {
