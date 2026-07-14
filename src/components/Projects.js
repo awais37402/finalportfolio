@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import './Projects.css';
 
 // Import GSAP
@@ -28,8 +28,8 @@ const Projects = () => {
   const videoRefs = useRef({});
   const [loading, setLoading] = useState(true);
 
-  // Complete project data - 5 Projects
-  const projectData = [
+  // Complete project data - 5 Projects (wrapped with useMemo to prevent recreation)
+  const projectData = useMemo(() => [
     {
       id: 1,
       title: 'Luxury Watches Store',
@@ -72,29 +72,29 @@ const Projects = () => {
       color: '#45B7D1',
       icon: '🦷'
     },
-   {
-  id: 4,
-  title: 'Order Management System',
-  category: 'FULL-STACK WEB APPLICATION',
-  description: 'A complete watch e-commerce order management system where customers can browse watches, place orders, and administrators can manage products, customers, and orders through a secure admin dashboard.',
-  video: project4Video,
-  thumbnail: project4Thumb,
-  technologies: ['PHP', 'MySQL', 'JavaScript', 'HTML', 'CSS', 'Bootstrap'],
-  features: [
-    'User Registration & Login',
-    'Watch Product Catalog',
-    'Shopping Cart',
-    'Secure Checkout',
-    'Order Tracking',
-    'Admin Dashboard',
-    'Order Management',
-    'Product Management'
-  ],
-  liveDemo: 'https://example.com/project4',
-  github: 'https://github.com/yourusername/order-management-system',
-  color: '#96CEB4',
-  icon: '⌚'
-},
+    {
+      id: 4,
+      title: 'Order Management System',
+      category: 'FULL-STACK WEB APPLICATION',
+      description: 'A complete watch e-commerce order management system where customers can browse watches, place orders, and administrators can manage products, customers, and orders through a secure admin dashboard.',
+      video: project4Video,
+      thumbnail: project4Thumb,
+      technologies: ['PHP', 'MySQL', 'JavaScript', 'HTML', 'CSS', 'Bootstrap'],
+      features: [
+        'User Registration & Login',
+        'Watch Product Catalog',
+        'Shopping Cart',
+        'Secure Checkout',
+        'Order Tracking',
+        'Admin Dashboard',
+        'Order Management',
+        'Product Management'
+      ],
+      liveDemo: 'https://example.com/project4',
+      github: 'https://github.com/yourusername/order-management-system',
+      color: '#96CEB4',
+      icon: '⌚'
+    },
     {
       id: 5,
       title: 'E-Learning Platform',
@@ -109,7 +109,7 @@ const Projects = () => {
       color: '#9B59B6',
       icon: '📚'
     }
-  ];
+  ], []);
 
   // Handle video play/pause on click
   const handleVideoClick = (projectId) => {
@@ -135,9 +135,10 @@ const Projects = () => {
 
   // Set projects on load
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 800);
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-play videos when they become visible
@@ -210,8 +211,8 @@ const Projects = () => {
       container.style.position = 'relative';
       container.style.height = '100vh';
 
-      // Create horizontal scroll animation
-      const animation = gsap.to(sections, {
+      // Create horizontal scroll animation (removed unused variable)
+      gsap.to(sections, {
         xPercent: -100 * (sections.length - 1),
         ease: "none",
         scrollTrigger: {
@@ -300,7 +301,6 @@ const Projects = () => {
                   className="project-video"
                   autoPlay
                 />
-                {/* Removed category and play overlay */}
               </div>
               
               {/* Content */}
@@ -321,8 +321,6 @@ const Projects = () => {
                     </span>
                   ))}
                 </div>
-                
-                {/* Removed project-actions section entirely */}
               </div>
             </div>
           </section>

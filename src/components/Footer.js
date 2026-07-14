@@ -67,12 +67,14 @@ const Footer = () => {
     };
   }, []);
 
+
   const socialLinks = [
     { name: 'GitHub', icon: '🐙', url: 'https://github.com/awais37402' },
     { name: 'LinkedIn', icon: '💼', url: 'https://www.linkedin.com/in/awais-tahir-037245253/' },
     { name: 'Twitter', icon: '🐦', url: '#' },
     { name: 'YouTube', icon: '📺', url: '#' },
   ];
+
 
   const quickLinks = [
     { name: 'Home', href: '#home' },
@@ -184,6 +186,7 @@ const Footer = () => {
             </div>
             <div className="footer-social-line"></div>
           </div>
+
         </div>
 
         <div className="footer-bottom">
