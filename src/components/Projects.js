@@ -141,46 +141,45 @@ const Projects = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-play videos when they become visible
+  // Auto-play videos when they become visible and stop when invisible
   useEffect(() => {
     if (loading) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const videoElement = entry.target;
-          if (entry.isIntersecting) {
-            // Pause all other videos
-            Object.keys(videoRefs.current).forEach((key) => {
-              const otherVideo = videoRefs.current[key];
-              if (otherVideo && otherVideo !== videoElement && !otherVideo.paused) {
-                otherVideo.pause();
+    const timeoutId = setTimeout(() => {
+      const videoElements = Object.values(videoRefs.current).filter(v => v !== null);
+      
+      if (videoElements.length === 0) return;
+
+      const observers = videoElements.map((videoElement) => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                videoElement.play().catch(() => {});
+              } else {
+                if (!videoElement.paused) {
+                  videoElement.pause();
+                }
               }
             });
-            // Play this video
-            videoElement.play().catch(() => {
-              // Autoplay might be blocked, handle silently
-            });
-          } else {
-            // Pause video when not visible
-            if (!videoElement.paused) {
-              videoElement.pause();
-            }
+          },
+          { 
+            threshold: 0.5,
+            rootMargin: '0px'
           }
-        });
-      },
-      { threshold: 0.5 }
-    );
+        );
 
-    // Observe all video elements
-    Object.values(videoRefs.current).forEach((video) => {
-      if (video) {
-        observer.observe(video);
-      }
-    });
+        observer.observe(videoElement);
+        return observer;
+      });
+
+      return () => {
+        observers.forEach(observer => observer.disconnect());
+      };
+    }, 200);
 
     return () => {
-      observer.disconnect();
+      clearTimeout(timeoutId);
     };
   }, [loading]);
 
@@ -193,8 +192,8 @@ const Projects = () => {
       if (!container) return;
 
       // Get header height dynamically
-      const header = document.querySelector('header') || document.querySelector('.header');
-      const headerHeight = header ? header.offsetHeight : 70;
+      const header = document.querySelector('header') || document.querySelector('.header') || document.querySelector('nav');
+      const headerHeight = header ? header.offsetHeight : 0;
       
       // Set CSS variable for header height
       document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
@@ -268,7 +267,7 @@ const Projects = () => {
       id="projects"
       className="projects-wrapper"
     >
-      {/* Intro Section - ABOVE the horizontal scrolling projects */}
+      {/* Intro Section - Starts at very top */}
       <div className="projects-intro-section">
         <div className="intro-content">
           <h2>Explore My Work</h2>
@@ -303,7 +302,6 @@ const Projects = () => {
                   loop
                   playsInline
                   className="project-video"
-                  autoPlay
                 />
               </div>
               
