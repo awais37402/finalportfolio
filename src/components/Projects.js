@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import './Projects.css';
 
 // Import GSAP
@@ -27,6 +27,9 @@ const Projects = () => {
   const sectionsRef = useRef([]);
   const videoRefs = useRef({});
   const [loading, setLoading] = useState(true);
+  const [playingStates, setPlayingStates] = useState({});
+  const [progressStates, setProgressStates] = useState({});
+  const [showControls, setShowControls] = useState({});
 
   // Complete project data - 5 Projects
   const projectData = useMemo(() => [
@@ -38,9 +41,6 @@ const Projects = () => {
       video: project1Video,
       thumbnail: project1Thumb,
       technologies: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'JWT', 'CSS3'],
-      features: ['Secure Authentication', 'Shopping Cart', 'Product Management', 'Order Management'],
-      liveDemo: 'https://example.com/project1',
-      github: 'https://github.com/awais37402/watch',
       color: '#FF6B6B',
       icon: '⌚'
     },
@@ -52,9 +52,6 @@ const Projects = () => {
       video: project2Video,
       thumbnail: project2Thumb,
       technologies: ['React.js', 'JavaScript', 'CSS3', 'HTML5'],
-      features: ['AI CV Generation', 'Professional Templates', 'Instant Preview', 'Responsive Design'],
-      liveDemo: 'https://example.com/project2',
-      github: 'https://github.com/awais37402/resume',
       color: '#4ECDC4',
       icon: '📄'
     },
@@ -66,9 +63,6 @@ const Projects = () => {
       video: project3Video,
       thumbnail: project3Thumb,
       technologies: ['React.js', 'CSS3', 'JavaScript'],
-      features: ['Responsive Design', 'Online Appointment Section', 'Modern UI/UX', 'Smooth Navigation'],
-      liveDemo: 'https://example.com/project3',
-      github: 'https://github.com/yourusername/project3',
       color: '#45B7D1',
       icon: '🦷'
     },
@@ -80,18 +74,6 @@ const Projects = () => {
       video: project4Video,
       thumbnail: project4Thumb,
       technologies: ['PHP', 'MySQL', 'JavaScript', 'HTML', 'CSS', 'Bootstrap'],
-      features: [
-        'User Registration & Login',
-        'Watch Product Catalog',
-        'Shopping Cart',
-        'Secure Checkout',
-        'Order Tracking',
-        'Admin Dashboard',
-        'Order Management',
-        'Product Management'
-      ],
-      liveDemo: 'https://example.com/project4',
-      github: 'https://github.com/yourusername/order-management-system',
       color: '#96CEB4',
       icon: '⌚'
     },
@@ -103,35 +85,79 @@ const Projects = () => {
       video: project5Video,
       thumbnail: project5Thumb,
       technologies: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Socket.io', 'Tailwind CSS'],
-      features: ['Course Management', 'Video Streaming', 'Progress Tracking', 'Interactive Quizzes', 'Live Chat'],
-      liveDemo: 'https://example.com/project5',
-      github: 'https://github.com/yourusername/project5',
       color: '#9B59B6',
       icon: '📚'
     }
   ], []);
 
-  // Handle video play/pause on click
-  const handleVideoClick = (projectId) => {
+  // Toggle video playback
+  const toggleVideo = useCallback((projectId, e) => {
+    e.stopPropagation();
     const video = videoRefs.current[projectId];
-    if (video) {
-      if (video.paused) {
-        // Pause all other videos
-        Object.keys(videoRefs.current).forEach((key) => {
-          if (key !== projectId) {
-            const otherVideo = videoRefs.current[key];
-            if (otherVideo && !otherVideo.paused) {
-              otherVideo.pause();
-            }
+    if (!video) return;
+
+    if (video.paused) {
+      // Pause all other videos
+      Object.keys(videoRefs.current).forEach((key) => {
+        if (key !== projectId) {
+          const otherVideo = videoRefs.current[key];
+          if (otherVideo && !otherVideo.paused) {
+            otherVideo.pause();
+            setPlayingStates(prev => ({ ...prev, [key]: false }));
           }
+        }
+      });
+      
+      video.play()
+        .then(() => {
+          setPlayingStates(prev => ({ ...prev, [projectId]: true }));
+          // Show pause button briefly
+          setShowControls(prev => ({ ...prev, [projectId]: true }));
+          setTimeout(() => {
+            setShowControls(prev => ({ ...prev, [projectId]: false }));
+          }, 2000);
+        })
+        .catch(() => {
+          setPlayingStates(prev => ({ ...prev, [projectId]: false }));
         });
-        // Play this video
-        video.play();
-      } else {
-        video.pause();
-      }
+    } else {
+      video.pause();
+      setPlayingStates(prev => ({ ...prev, [projectId]: false }));
+      setShowControls(prev => ({ ...prev, [projectId]: true }));
     }
-  };
+  }, []);
+
+  // Handle video click
+  const handleVideoClick = useCallback((projectId, e) => {
+    e.stopPropagation();
+    const video = videoRefs.current[projectId];
+    if (!video) return;
+    
+    if (!video.paused) {
+      // If playing, toggle controls visibility
+      setShowControls(prev => ({ 
+        ...prev, 
+        [projectId]: !prev[projectId] 
+      }));
+      // Auto hide after 2 seconds if showing
+      if (!showControls[projectId]) {
+        setTimeout(() => {
+          setShowControls(prev => ({ ...prev, [projectId]: false }));
+        }, 2000);
+      }
+    } else {
+      toggleVideo(projectId, e);
+    }
+  }, [toggleVideo, showControls]);
+
+  // Update progress
+  const updateProgress = useCallback((projectId) => {
+    const video = videoRefs.current[projectId];
+    if (!video) return;
+    
+    const progress = (video.currentTime / video.duration) * 100;
+    setProgressStates(prev => ({ ...prev, [projectId]: progress }));
+  }, []);
 
   // Set projects on load
   useEffect(() => {
@@ -141,47 +167,76 @@ const Projects = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-play videos when they become visible and stop when invisible
+  // Initialize states
+  useEffect(() => {
+    if (!loading) {
+      const initialStates = {};
+      const initialProgress = {};
+      const initialControls = {};
+      projectData.forEach(project => {
+        initialStates[project.id] = false;
+        initialProgress[project.id] = 0;
+        initialControls[project.id] = false;
+      });
+      setPlayingStates(initialStates);
+      setProgressStates(initialProgress);
+      setShowControls(initialControls);
+    }
+  }, [loading, projectData]);
+
+  // Video event listeners
   useEffect(() => {
     if (loading) return;
 
-    const timeoutId = setTimeout(() => {
-      const videoElements = Object.values(videoRefs.current).filter(v => v !== null);
-      
-      if (videoElements.length === 0) return;
+    const videoElements = Object.keys(videoRefs.current).map(key => ({
+      id: key,
+      element: videoRefs.current[key]
+    }));
 
-      const observers = videoElements.map((videoElement) => {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                videoElement.play().catch(() => {});
-              } else {
-                if (!videoElement.paused) {
-                  videoElement.pause();
-                }
-              }
-            });
-          },
-          { 
-            threshold: 0.5,
-            rootMargin: '0px'
-          }
-        );
+    const handlers = videoElements.map(({ id, element }) => {
+      if (!element) return null;
 
-        observer.observe(videoElement);
-        return observer;
-      });
-
-      return () => {
-        observers.forEach(observer => observer.disconnect());
+      const onTimeUpdate = () => updateProgress(id);
+      const onPlay = () => {
+        setPlayingStates(prev => ({ ...prev, [id]: true }));
+        setShowControls(prev => ({ ...prev, [id]: true }));
+        setTimeout(() => {
+          setShowControls(prev => ({ ...prev, [id]: false }));
+        }, 2000);
       };
-    }, 200);
+      const onPause = () => {
+        setPlayingStates(prev => ({ ...prev, [id]: false }));
+        setShowControls(prev => ({ ...prev, [id]: true }));
+      };
+      const onEnded = () => {
+        setPlayingStates(prev => ({ ...prev, [id]: false }));
+        setProgressStates(prev => ({ ...prev, [id]: 0 }));
+        element.currentTime = 0;
+        setShowControls(prev => ({ ...prev, [id]: true }));
+      };
+
+      element.addEventListener('timeupdate', onTimeUpdate);
+      element.addEventListener('play', onPlay);
+      element.addEventListener('pause', onPause);
+      element.addEventListener('ended', onEnded);
+
+      return { id, onTimeUpdate, onPlay, onPause, onEnded };
+    });
 
     return () => {
-      clearTimeout(timeoutId);
+      handlers.forEach((handler) => {
+        if (!handler) return;
+        const { id, onTimeUpdate, onPlay, onPause, onEnded } = handler;
+        const element = videoRefs.current[id];
+        if (element) {
+          element.removeEventListener('timeupdate', onTimeUpdate);
+          element.removeEventListener('play', onPlay);
+          element.removeEventListener('pause', onPause);
+          element.removeEventListener('ended', onEnded);
+        }
+      });
     };
-  }, [loading]);
+  }, [loading, updateProgress]);
 
   // GSAP Horizontal Scroll Animation
   useEffect(() => {
@@ -191,26 +246,21 @@ const Projects = () => {
       const container = containerRef.current;
       if (!container) return;
 
-      // Get header height dynamically
       const header = document.querySelector('header') || document.querySelector('.header') || document.querySelector('nav');
       const headerHeight = header ? header.offsetHeight : 0;
       
-      // Set CSS variable for header height
       document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
 
-      // Kill any existing ScrollTriggers
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
       const sections = sectionsRef.current.filter(el => el !== null);
       
-      // Set container width based on number of panels
       const panelCount = sections.length;
       container.style.width = `${panelCount * 100}vw`;
       container.style.display = 'flex';
       container.style.position = 'relative';
       container.style.height = '100vh';
 
-      // Create horizontal scroll animation
       gsap.to(sections, {
         xPercent: -100 * (sections.length - 1),
         ease: "none",
@@ -229,12 +279,10 @@ const Projects = () => {
         }
       });
 
-      // Refresh ScrollTrigger
       setTimeout(() => {
         ScrollTrigger.refresh();
       }, 200);
 
-      // Handle resize
       const handleResize = () => {
         ScrollTrigger.refresh();
       };
@@ -246,7 +294,6 @@ const Projects = () => {
       };
     }, 150);
 
-    // Cleanup
     return () => {
       clearTimeout(timer);
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -263,11 +310,8 @@ const Projects = () => {
   }
 
   return (
-    <div 
-      id="projects"
-      className="projects-wrapper"
-    >
-      {/* Intro Section - Starts at very top */}
+    <div id="projects" className="projects-wrapper">
+      {/* Intro Section */}
       <div className="projects-intro-section">
         <div className="intro-content">
           <h2>Explore My Work</h2>
@@ -281,54 +325,99 @@ const Projects = () => {
 
       {/* Horizontal Scrolling Projects */}
       <div className="projects-container" ref={containerRef}>
-        {/* Project Panels */}
-        {projectData.map((project, index) => (
-          <section 
-            key={project.id}
-            className="panel project-panel"
-            ref={el => sectionsRef.current[index] = el}
-          >
-            <div className="project-card">
-              {/* Video/Thumbnail - Click to play/pause */}
-              <div 
-                className="project-media"
-                onClick={() => handleVideoClick(project.id)}
-              >
-                <video 
-                  ref={el => videoRefs.current[project.id] = el}
-                  src={project.video}
-                  poster={project.thumbnail}
-                  muted
-                  loop
-                  playsInline
-                  className="project-video"
-                />
-              </div>
-              
-              {/* Content */}
-              <div className="project-content">
-                <div className="project-header">
-                  <div className="project-icon" style={{ background: project.color }}>
-                    <span>{project.icon}</span>
-                  </div>
-                  <h3 className="project-title">{project.title}</h3>
-                </div>
-                
-                <p className="project-description">{project.description}</p>
-                
-                <div className="project-tech">
-                  {project.technologies.map((tech, i) => (
-                    <span key={i} className="tech-tag" style={{ borderColor: project.color }}>
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        ))}
+        {projectData.map((project, index) => {
+          const isPlaying = playingStates[project.id] || false;
+          const progress = progressStates[project.id] || 0;
+          const showControl = showControls[project.id] || false;
+          
+          return (
+            <section 
+              key={project.id}
+              className="panel project-panel"
+              ref={el => sectionsRef.current[index] = el}
+            >
+              <div className="project-card">
+                {/* Video Section */}
+                <div 
+                  className="project-media"
+                  onClick={(e) => handleVideoClick(project.id, e)}
+                >
+                  <video 
+                    ref={el => videoRefs.current[project.id] = el}
+                    src={project.video}
+                    poster={project.thumbnail}
+                    muted
+                    loop={false}
+                    playsInline
+                    className="project-video"
+                  />
+                  
+                  {/* Play Button - Shows when video is paused */}
+                  <button 
+                    className={`video-play-btn ${!isPlaying ? 'show' : ''}`}
+                    onClick={(e) => toggleVideo(project.id, e)}
+                    aria-label="Play video"
+                  >
+                    ▶
+                  </button>
 
-        {/* Last Panel - Conclusion */}
+                  {/* Pause Button - Shows on hover when playing OR click */}
+                  <button 
+                    className={`video-pause-btn ${isPlaying ? 'show-on-hover' : ''} ${isPlaying && showControl ? 'show' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const video = videoRefs.current[project.id];
+                      if (video) {
+                        video.pause();
+                        setPlayingStates(prev => ({ ...prev, [project.id]: false }));
+                        setShowControls(prev => ({ ...prev, [project.id]: true }));
+                      }
+                    }}
+                    aria-label="Pause video"
+                  >
+                    ⏸
+                  </button>
+
+                  {/* Progress Bar */}
+                  <div className="video-progress">
+                    <div 
+                      className="video-progress-bar" 
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+
+                  {/* Status Badge */}
+                  <div className="video-status">
+                    <span className={`status-dot ${isPlaying ? 'playing' : 'paused'}`} />
+                    {isPlaying ? 'Playing' : 'Paused'}
+                  </div>
+                </div>
+                
+                {/* Content */}
+                <div className="project-content">
+                  <div className="project-header">
+                    <div className="project-icon" style={{ background: project.color }}>
+                      <span>{project.icon}</span>
+                    </div>
+                    <h3 className="project-title">{project.title}</h3>
+                  </div>
+                  
+                  <p className="project-description">{project.description}</p>
+                  
+                  <div className="project-tech">
+                    {project.technologies.map((tech, i) => (
+                      <span key={i} className="tech-tag" style={{ borderColor: project.color }}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+
+        {/* Outro Panel */}
         <div className="panel outro-panel">
           <div className="outro-content">
             <h2>Let's Build Something Amazing!</h2>
