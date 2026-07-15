@@ -184,13 +184,16 @@ const Projects = () => {
     }
   }, [loading, projectData]);
 
-  // Video event listeners
+  // Video event listeners - FIXED VERSION
   useEffect(() => {
     if (loading) return;
 
-    const videoElements = Object.keys(videoRefs.current).map(key => ({
+    // Capture the current ref ONCE
+    const videos = videoRefs.current;
+
+    const videoElements = Object.keys(videos).map((key) => ({
       id: key,
-      element: videoRefs.current[key]
+      element: videos[key],
     }));
 
     const handlers = videoElements.map(({ id, element }) => {
@@ -200,6 +203,7 @@ const Projects = () => {
       const onPlay = () => {
         setPlayingStates(prev => ({ ...prev, [id]: true }));
         setShowControls(prev => ({ ...prev, [id]: true }));
+
         setTimeout(() => {
           setShowControls(prev => ({ ...prev, [id]: false }));
         }, 2000);
@@ -215,25 +219,36 @@ const Projects = () => {
         setShowControls(prev => ({ ...prev, [id]: true }));
       };
 
-      element.addEventListener('timeupdate', onTimeUpdate);
-      element.addEventListener('play', onPlay);
-      element.addEventListener('pause', onPause);
-      element.addEventListener('ended', onEnded);
+      element.addEventListener("timeupdate", onTimeUpdate);
+      element.addEventListener("play", onPlay);
+      element.addEventListener("pause", onPause);
+      element.addEventListener("ended", onEnded);
 
-      return { id, onTimeUpdate, onPlay, onPause, onEnded };
+      return {
+        element,
+        onTimeUpdate,
+        onPlay,
+        onPause,
+        onEnded,
+      };
     });
 
     return () => {
       handlers.forEach((handler) => {
         if (!handler) return;
-        const { id, onTimeUpdate, onPlay, onPause, onEnded } = handler;
-        const element = videoRefs.current[id];
-        if (element) {
-          element.removeEventListener('timeupdate', onTimeUpdate);
-          element.removeEventListener('play', onPlay);
-          element.removeEventListener('pause', onPause);
-          element.removeEventListener('ended', onEnded);
-        }
+
+        const {
+          element,
+          onTimeUpdate,
+          onPlay,
+          onPause,
+          onEnded,
+        } = handler;
+
+        element.removeEventListener("timeupdate", onTimeUpdate);
+        element.removeEventListener("play", onPlay);
+        element.removeEventListener("pause", onPause);
+        element.removeEventListener("ended", onEnded);
       });
     };
   }, [loading, updateProgress]);
